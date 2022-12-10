@@ -15,6 +15,21 @@ class App extends React.Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    if (contacts !== null) {
+      this.setState({
+        contacts: JSON.parse(contacts),
+      });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   addContact = contact => {
     if (
       this.state.contacts.find(
@@ -52,13 +67,12 @@ class App extends React.Component {
       <AppStyled>
         <h2>Phonebook</h2>
         <ContactForm onSubmit={this.addContact} />
-          <h3>Contacts</h3>
-          <Filter onChangeFilter={this.onChangeFilter} filter={filter} />
-          <ContactList
-            onRemove={this.removeContact}
-            contacts={filteredContacts}
-          />
-
+        <h3>Contacts</h3>
+        <Filter onChangeFilter={this.onChangeFilter} filter={filter} />
+        <ContactList
+          onRemove={this.removeContact}
+          contacts={filteredContacts}
+        />
       </AppStyled>
     );
   }
